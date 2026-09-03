@@ -47,7 +47,7 @@ Tor proxy setting does not route indexed API searches.
 | Onion URL model             | Validates the v3 checksum/version and restricts scheme, credentials, and ports before canonicalization.                                                         | `src/onion.ts:43-64`, `src/onion.ts:82-115`                                                  |
 | Onion transport             | Performs bounded text `GET` requests through a SOCKS agent and confines redirects to the original onion host.                                                   | `src/http.ts:178-323`                                                                        |
 | Verifier                    | Checks Tor availability, validates limits, verifies at most 20 results two at a time, extracts inert text, and records response metadata/hashes.                | `src/verify.ts:22-187`                                                                       |
-| Rendering and reports       | Emits human, JSON, JSONL, or Markdown output; validates imported reports and reads/writes user-selected files.                                                  | `src/output.ts:27-108`, `src/report.ts:9-253`, `src/report.ts:255-285`                       |
+| Rendering and reports       | Emits human, JSON, JSONL, or Markdown output; validates imported reports and reads/writes user-selected files.                                                  | `src/output.ts:27-108`, `src/report.ts:11-282`, `src/report.ts:284-314`                      |
 | Sanitization                | Removes terminal and bidirectional controls, normalizes/bounds selected text, redacts exact secrets, escapes Markdown, and recursively cleans raw JSON strings. | `src/sanitize.ts:1-103`                                                                      |
 
 ## Execution flows
@@ -150,7 +150,7 @@ Imported reports must be regular files no larger than 5 MiB. Strict schemas cap
 the main arrays and reject unknown fields; known rendered strings are required
 to be canonical, control-free, and bounded. Each result URL, including a saved
 final verification URL, is canonicalized again and checked for consistency
-before use (`src/report.ts:9-253`). Reports are still unsigned investigative
+before use (`src/report.ts:11-282`). Reports are still unsigned investigative
 data: validation cannot establish provenance or the truth of an indexed claim.
 
 ## Extension rules

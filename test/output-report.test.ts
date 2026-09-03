@@ -147,3 +147,17 @@ test("readReport rejects undeclared report fields", async (context) => {
 
   await assert.rejects(readReport(outputPath), hasErrorCode("REPORT_INVALID"));
 });
+
+test("readReport rejects files larger than its fixed input bound", async (context) => {
+  const directory = await mkdtemp(
+    path.join(tmpdir(), "darkfootprint-large-report-test-"),
+  );
+  context.after(async () => rm(directory, { recursive: true, force: true }));
+  const outputPath = path.join(directory, "large.json");
+  await writeFileExclusive(outputPath, "x".repeat(5 * 1024 * 1024 + 1));
+
+  await assert.rejects(
+    readReport(outputPath),
+    hasErrorCode("REPORT_SIZE_INVALID"),
+  );
+});

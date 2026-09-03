@@ -8,6 +8,43 @@ import type { SearchReport } from "./types.js";
 
 const MAX_REPORT_BYTES = 5 * 1024 * 1024;
 
+async function readBoundedRegularFile(resolved: string): Promise<string> {
+  const handle = await fs.open(resolved, "r");
+  try {
+    const stat = await handle.stat();
+    if (!stat.isFile() || stat.size > MAX_REPORT_BYTES) {
+      throw new AppError(
+        "REPORT_SIZE_INVALID",
+        "Report must be a regular file no larger than 5 MiB.",
+        EXIT.OUTPUT,
+      );
+    }
+
+    const buffer = Buffer.allocUnsafe(MAX_REPORT_BYTES + 1);
+    let total = 0;
+    while (total < buffer.length) {
+      const { bytesRead } = await handle.read(
+        buffer,
+        total,
+        buffer.length - total,
+        null,
+      );
+      if (bytesRead === 0) break;
+      total += bytesRead;
+    }
+    if (total > MAX_REPORT_BYTES) {
+      throw new AppError(
+        "REPORT_SIZE_INVALID",
+        "Report must be a regular file no larger than 5 MiB.",
+        EXIT.OUTPUT,
+      );
+    }
+    return buffer.subarray(0, total).toString("utf8");
+  } finally {
+    await handle.close();
+  }
+}
+
 const ProvenanceSchema = z
   .object({
     source_id: z.string().min(1),
@@ -119,15 +156,7 @@ const ReportSchema = z
 export async function readReport(inputPath: string): Promise<SearchReport> {
   try {
     const resolved = path.resolve(inputPath);
-    const stat = await fs.stat(resolved);
-    if (!stat.isFile() || stat.size > MAX_REPORT_BYTES) {
-      throw new AppError(
-        "REPORT_SIZE_INVALID",
-        "Report must be a regular file no larger than 5 MiB.",
-        EXIT.OUTPUT,
-      );
-    }
-    const raw = await fs.readFile(resolved, "utf8");
+    const raw = await readBoundedRegularFile(resolved);
     const parsed = ReportSchema.parse(JSON.parse(raw));
     const canonicalText = (value: string, maxLength: number): boolean =>
       sanitizeText(value, maxLength) === value;
