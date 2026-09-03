@@ -1,0 +1,29 @@
+node_modules/
+.pnpm-store/
+dist/
+coverage/
+*.tgz
+
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+config.local.json
+*.pem
+*.key
+
+# Investigation output: never commit collected data by default
+reports/
+*.jsonl
+*.sqlite
+*.sqlite-*
+*.db
+
+# Editors and operating systems
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.log
+.git-sandbox-backup/

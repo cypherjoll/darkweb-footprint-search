@@ -1,0 +1,58 @@
+{
+  "name": "darkweb-footprint-search",
+  "version": "0.1.0",
+  "description": "Defensive CLI for searching indexed dark-web footprints with explicit, bounded Tor verification.",
+  "homepage": "https://github.com/cypherjoll/darkweb-footprint-search#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cypherjoll/darkweb-footprint-search.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cypherjoll/darkweb-footprint-search/issues"
+  },
+  "type": "module",
+  "bin": {
+    "darkfootprint": "dist/src/cli.js"
+  },
+  "files": [
+    "dist/src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "pnpm run clean && tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "pnpm run build && node --test \"dist/test/**/*.test.js\"",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "pack:check": "pnpm pack --dry-run"
+  },
+  "keywords": [
+    "cybersecurity",
+    "dark-web",
+    "digital-footprint",
+    "osint",
+    "threat-intelligence",
+    "tor"
+  ],
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22.19"
+  },
+  "packageManager": "pnpm@11.19.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "cheerio": "^1.2.0",
+    "commander": "^15.0.0",
+    "socks-proxy-agent": "^10.1.0",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.1",
+    "prettier": "^3.9.6",
+    "typescript": "^7.0.2"
+  }
+}
