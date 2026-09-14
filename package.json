@@ -48,7 +48,7 @@
     "cheerio": "^1.2.0",
     "commander": "^15.0.0",
     "socks-proxy-agent": "^10.1.0",
-    "zod": "^4.5.4"
+    "zod": "^4.6.2"
   },
   "devDependencies": {
     "@types/node": "^26.4.1",
